@@ -1,5 +1,5 @@
 class Node:
-    def __init__(self, puzzle_data, puzzle_goal, g_score, metric='simple'):
+    def __init__(self, puzzle_data, puzzle_goal, g_score=0, metric='simple'):
         self.puzzle_data = puzzle_data
         self.puzzle_goal = puzzle_goal
         self.dim = len(puzzle_data)
@@ -21,9 +21,6 @@ class Node:
 
     def get_f_score(self):
         return self.get_h_score() + self.g_score
-
-    def find_other_states(self):
-        pass
 
     def _find_coords_empty_block(self):
         for i in range(self.dim):
@@ -74,19 +71,12 @@ class Node:
     def _find_other_coords(self):
         nodes = []
         for find_direction in [self._top, self._bottom, self._right, self._left]:
-            coord = find_direction(self)
+            coord = find_direction()
             if coord:
                 nodes.append(Node(self._change_coords_empty_block(coord), self.g_score + 1, self.puzzle_goal))
-                return nodes.sort(key=lambda x: x.f_score, reverse=False)
+        return nodes.sort(key=lambda x: x.f_score, reverse=False)
 
-    def _make_step(self, direction):
-        if direction == 'top':
-            self.puzzle_data = self._change_coords_empty_block(self._top())
-        elif direction == 'bottom':
-            self.puzzle_data = self._change_coords_empty_block(self._bottom())
-        elif direction == 'right':
-            self.puzzle_data = self._change_coords_empty_block(self._right())
-        elif direction == 'left':
-            self.puzzle_data = self._change_coords_empty_block(self._left())
-        else:
-            raise ValueError(f'Can not possible to make step in {direction}')
+    def visualize_current_state(self):
+        for i in range(self.dim):
+            print(' '.join(self.puzzle_data[i]))
+

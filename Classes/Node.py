@@ -1,5 +1,5 @@
 class Node:
-    def __init__(self, puzzle_data, g_score=0, metric='simple'):
+    def __init__(self, puzzle_data, g_score=0, metric='euclead'):
         self.puzzle_data = puzzle_data
         self.dim = len(puzzle_data)
         self.puzzle_goal = self._generate_puzzle_goal()
@@ -11,6 +11,10 @@ class Node:
     def get_h_score(self):
         if self.metric == 'simple':
             return self._get_h_simple()
+        if self.metric == 'manhetten':
+            return self._get_h_manhatten()
+        if self.metric == 'euclead':
+            return self._get_h_euclead()
 
     def _get_h_simple(self):
         result = 0
@@ -18,6 +22,20 @@ class Node:
             for j in range(self.dim):
                 if self.puzzle_data[i][j] != self.puzzle_goal[i][j]:
                     result += 1
+        return result
+
+    def _get_h_manhatten(self):
+        result = 0
+        for i in range(self.dim):
+            for j in range(self.dim):
+                result += abs(int(self.puzzle_data[i][j]) - int(self.puzzle_goal[i][j]))
+        return result
+
+    def _get_h_euclead(self):
+        result = 0
+        for i in range(self.dim):
+            for j in range(self.dim):
+                result += (int(self.puzzle_data[i][j]) - int(self.puzzle_goal[i][j])) ** 2
         return result
 
     def get_f_score(self):
@@ -62,13 +80,13 @@ class Node:
 
     def _check_possible_move(self, direction):
         if direction == 'top':
-            return self.coords_empty_block[0] - 1 > 0
+            return self.coords_empty_block[0] - 1 >= 0
         elif direction == 'bottom':
             return self.coords_empty_block[0] + 1 < self.dim
         elif direction == 'right':
             return self.coords_empty_block[1] + 1 < self.dim
         elif direction == 'left':
-            return self.coords_empty_block[1] - 1 > 0
+            return self.coords_empty_block[1] - 1 >= 0
         else:
             raise ValueError('No such direction to move')
 
@@ -91,19 +109,22 @@ class Node:
         result[self.dim - 1][self.dim - 1] = '0'
         return result
 
+    def _is_sovable(self):
+        pass
+
     def visualize_current_state(self):
         for i in range(self.dim):
             print(' '.join(self.puzzle_data[i]))
 
-# data = '''2 4 3
-# 5 7 6
-# 0 8 1'''.split('\n')
-# data = [i.split(' ') for i in data]
-#
-# node = Node(puzzle_data=data, g_score=0)
-# node.visualize_current_state()
-# print()
-# for i in node._find_other_coords():
-#     i.visualize_current_state()
-#     print(i.get_h_score())
-#     print()
+data = '''2 4 3
+0 5 6
+7 8 1'''.split('\n')
+data = [i.split(' ') for i in data]
+
+node = Node(puzzle_data=data, g_score=0)
+node.visualize_current_state()
+print()
+for i in node.find_other_coords():
+    i.visualize_current_state()
+    print(i.get_h_score())
+    print()

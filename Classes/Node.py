@@ -1,5 +1,5 @@
 class Node:
-    def __init__(self, puzzle_data, g_score=0, metric='euclead'):
+    def __init__(self, puzzle_data, g_score=0, metric='simple'):
         self.puzzle_data = puzzle_data
         self.dim = len(puzzle_data)
         self.puzzle_goal = self._generate_puzzle_goal()
@@ -109,22 +109,38 @@ class Node:
         result[self.dim - 1][self.dim - 1] = '0'
         return result
 
-    def _is_sovable(self):
-        pass
+    def _count_inversions(self):
+        cnt = 0
+        raw_data = [item for row in self.puzzle_data for item in row]
+        for i in range(len(raw_data)):
+            slice = raw_data[i:]
+            cnt += sum([int(raw_data[i]) > int(slice[j]) for j in range(len(slice)) if slice[j] != '0'])
+        return cnt
+
+    def is_solvable(self):
+        cnt_inv = self._count_inversions()
+        if self.dim % 2 != 0:
+            if self._count_inversions() % 2 == 0:
+                return True
+        else:
+            if self.coords_empty_block[0] % 2 == 0 and cnt_inv % 2 != 0:
+                return True
+            elif self.coords_empty_block[0] % 2 != 0 and cnt_inv % 2 == 0:
+                return True
+        return False
 
     def visualize_current_state(self):
         for i in range(self.dim):
             print(' '.join(self.puzzle_data[i]))
 
-data = '''2 4 3
-0 5 6
-7 8 1'''.split('\n')
+data = '''1 2 3\n0 4 6\n7 5 8'''.split('\n')
 data = [i.split(' ') for i in data]
 
 node = Node(puzzle_data=data, g_score=0)
-node.visualize_current_state()
-print()
-for i in node.find_other_coords():
-    i.visualize_current_state()
-    print(i.get_h_score())
-    print()
+# print(node._is_solvable())
+# node.visualize_current_state()
+# print()
+# for i in node.find_other_coords():
+#     i.visualize_current_state()
+#     print(i.get_h_score())
+#     print()

@@ -7,6 +7,8 @@ class Game:
         self.close = []
 
     def solve(self):
+        if not self.start_node.is_solvable():
+            raise ValueError('This puzzle is not sovable')
         self.open.append(self.start_node)
         while len(self.open) != 0:
             curr = self.open[0]
@@ -22,9 +24,7 @@ class Game:
                 self.open.sort(key=lambda x: x.f_score, reverse=False)
                 self.close.append(curr.puzzle_data)
 
-data = '''8 1 2
-0 4 3
-7 6 5'''.split('\n')
+data = '''1 2 3\n0 4 6\n7 5 8'''.split('\n')
 data = [i.split(' ') for i in data]
 
 # data1 = '''1 2 3 4

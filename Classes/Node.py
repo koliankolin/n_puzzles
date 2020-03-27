@@ -123,9 +123,10 @@ class Node:
             if self._count_inversions() % 2 == 0:
                 return True
         else:
-            if self.coords_empty_block[0] % 2 == 0 and cnt_inv % 2 != 0:
+            cnt_row_bottom = self.dim - self.coords_empty_block[0] + 1
+            if cnt_row_bottom % 2 == 0 and cnt_inv % 2 != 0:
                 return True
-            elif self.coords_empty_block[0] % 2 != 0 and cnt_inv % 2 == 0:
+            elif cnt_row_bottom % 2 != 0 and cnt_inv % 2 == 0:
                 return True
         return False
 

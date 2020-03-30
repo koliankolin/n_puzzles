@@ -14,14 +14,15 @@ def main():
     for arg in args:
         try:
             parser = Parser(file_name=arg)
-            node = Node(puzzle_data=parser.get_data(), metric='manhetten')
+            node = Node(puzzle_data=parser.get_data(), metric='manhattan')
             game = Game(start_node=node)
             game.solve()
             exit(0)
         except ValueError as error:
             print(error)
+            exit(2)
     parser = Parser()
-    node = Node(puzzle_data=parser.get_data(), metric='manhetten')
+    node = Node(puzzle_data=parser.get_data(), metric='euclead')
     game = Game(start_node=node)
     game.solve()
 

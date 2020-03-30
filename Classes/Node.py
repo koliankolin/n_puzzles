@@ -7,12 +7,17 @@ class Node:
         self.g_score = g_score
         self.metric = metric
         self.f_score = self.get_f_score()
+        self.predecessor = None
+
+    def set_predecessor(self, predecessor):
+        if isinstance(predecessor, Node):
+            self.predecessor = predecessor
 
     def get_h_score(self):
         if self.metric == 'simple':
             return self._get_h_simple()
-        if self.metric == 'manhetten':
-            return self._get_h_manhatten()
+        if self.metric == 'manhattan':
+            return self._get_h_manhattan()
         if self.metric == 'euclead':
             return self._get_h_euclead()
 
@@ -24,19 +29,33 @@ class Node:
                     result += 1
         return result
 
-    def _get_h_manhatten(self):
+    def _get_h_manhattan(self):
         result = 0
         for i in range(self.dim):
             for j in range(self.dim):
-                result += abs(int(self.puzzle_data[i][j]) - int(self.puzzle_goal[i][j]))
+                tile = self.puzzle_data[i][j]
+                if tile == 0 or tile == '0':
+                    continue
+                row_goal, col_goal = self._find_coord_goal_state(tile)
+                result += abs(row_goal - i) + abs(col_goal - j)
         return result
 
     def _get_h_euclead(self):
         result = 0
         for i in range(self.dim):
             for j in range(self.dim):
-                result += (int(self.puzzle_data[i][j]) - int(self.puzzle_goal[i][j])) ** 2
+                tile = self.puzzle_data[i][j]
+                if tile == 0 or tile == '0':
+                    continue
+                row_goal, col_goal = self._find_coord_goal_state(tile)
+                result += (row_goal - i) ** 2 + abs(col_goal - j) ** 2
         return result
+
+    def _find_coord_goal_state(self, tile):
+        for i in range(self.dim):
+            for j in range(self.dim):
+                if self.puzzle_goal[i][j] == tile:
+                    return i, j
 
     def get_f_score(self):
         return self.get_h_score() + self.g_score
@@ -96,6 +115,7 @@ class Node:
             coord = find_direction()
             if coord:
                 nodes.append(Node(self._change_coords_empty_block(coord), self.g_score + 1, self.metric))
+        # nodes.sort(key=lambda x: x.f_score, reverse=False)
         return nodes
 
     def _generate_puzzle_goal(self):
@@ -133,6 +153,8 @@ class Node:
     def visualize_current_state(self):
         for i in range(self.dim):
             print(' '.join(self.puzzle_data[i]))
+        print()
+
 
 data = '''1 2 3\n0 4 6\n7 5 8'''.split('\n')
 data = [i.split(' ') for i in data]

@@ -8,7 +8,7 @@ class Game:
 
     def solve(self):
         if not self.start_node.is_solvable():
-            raise ValueError('This puzzle is not sovable')
+            raise ValueError('This puzzle is not solvable')
         self.open.append(self.start_node)
         while len(self.open) != 0:
             process = self._get_min_node()

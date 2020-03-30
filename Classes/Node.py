@@ -156,10 +156,10 @@ class Node:
         print()
 
 
-data = '''1 2 3\n0 4 6\n7 5 8'''.split('\n')
-data = [i.split(' ') for i in data]
-
-node = Node(puzzle_data=data, g_score=0)
+# data = '''1 2 3\n0 4 6\n7 5 8'''.split('\n')
+# data = [i.split(' ') for i in data]
+#
+# node = Node(puzzle_data=data, g_score=0)
 # print(node._is_solvable())
 # node.visualize_current_state()
 # print()

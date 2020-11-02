@@ -14,7 +14,7 @@ def main():
     for arg in args:
         try:
             parser = Parser(file_name=arg)
-            node = Node(puzzle_data=parser.get_data(), metric='manhattan')
+            node = Node(puzzle_data=parser.get_data(), metric='simple')
             game = Game(start_node=node)
             game.solve()
             exit(0)

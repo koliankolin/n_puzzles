@@ -129,7 +129,7 @@ class Node:
         result[self.dim - 1][self.dim - 1] = '0'
         return result
 
-    def _count_inversions(self):
+    def _count_invertions(self):
         cnt = 0
         raw_data = [item for row in self.puzzle_data for item in row]
         for i in range(len(raw_data)):
@@ -138,12 +138,12 @@ class Node:
         return cnt
 
     def is_solvable(self):
-        cnt_inv = self._count_inversions()
+        cnt_inv = self._count_invertions()
         if self.dim % 2 != 0:
-            if self._count_inversions() % 2 == 0:
+            if self._count_invertions() % 2 == 0:
                 return True
         else:
-            cnt_row_bottom = self.dim - self.coords_empty_block[0] + 1
+            cnt_row_bottom = self.dim - self.coords_empty_block[0] + 2
             if cnt_row_bottom % 2 == 0 and cnt_inv % 2 != 0:
                 return True
             elif cnt_row_bottom % 2 != 0 and cnt_inv % 2 == 0:
@@ -153,6 +153,7 @@ class Node:
     def visualize_current_state(self):
         for i in range(self.dim):
             print(' '.join(self.puzzle_data[i]))
+        print('F_score:', self.f_score)
         print()
 
 

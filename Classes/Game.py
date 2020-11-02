@@ -13,8 +13,12 @@ class Game:
         if not self.start_node.is_solvable():
             raise ValueError('This puzzle is not solvable')
         self.open.append(self.start_node)
+        i = 1
         while len(self.open) != 0:
             process = self._get_min_node()
+            process.visualize_current_state()
+            # if i == 10:
+            #     return
             self.count_selected += 1
             if process.get_h_score() == 0:
                 path_solutions = self._get_path(process)
@@ -41,6 +45,7 @@ class Game:
             count_max_close = len(self.close)
             if self.count_max_close < count_max_close:
                 self.count_max_close = count_max_close
+            i += 1
 
     def _print_total_stat(self, path):
         print('Total stats:')

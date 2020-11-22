@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 import argparse
 import random
@@ -23,7 +25,7 @@ def make_puzzle(s, solvable, iterations):
     for i in range(iterations):
         swap_empty(p)
 
-    if solvable:
+    if not solvable:
         if p[0] == 0 or p[1] == 0:
             p[-1], p[-2] = p[-2], p[-1]
         else:
@@ -93,10 +95,10 @@ if __name__ == "__main__":
     puzzle = make_puzzle(s, solvable=solv, iterations=args.iterations)
 
     w = len(str(s * s))
-    with open('random.' + ('solvable' if solv else 'unsolvable'), 'w') as f:
-        f.write("# This puzzle is %s" % ("solvable" if solv else "unsolvable") + '\n')
-        f.write("%d" % s + '\n')
-        for y in range(s):
-            for x in range(s):
-                f.write("%s " % (str(puzzle[x + y * s]).rjust(w)))
-            f.write('\n')
+    print("# This puzzle is %s" % ("solvable" if solv else "unsolvable"))
+    print("%d" % s)
+    # print(puzzle)
+    for y in range(s):
+        for x in range(s):
+            print("%s " % (str(puzzle[x + y * s]).rjust(w)), end=''),
+        print()

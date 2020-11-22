@@ -1,5 +1,5 @@
 class Node:
-    def __init__(self, puzzle_data, g_score=0, metric='simple'):
+    def __init__(self, puzzle_data, g_score=0, metric='manhattan'):
         self.puzzle_data = puzzle_data
         self.dim = len(puzzle_data)
         self.puzzle_goal = self._generate_puzzle_goal()
@@ -119,15 +119,22 @@ class Node:
         return nodes
 
     def _generate_puzzle_goal(self):
-        temp = []
-        result = []
-        for i in range(1, self.dim ** 2 + 1):
-            temp.append(str(i))
-            if len(temp) % self.dim == 0:
-                result.append(temp)
-                temp = []
-        result[self.dim - 1][self.dim - 1] = '0'
-        return result
+        mat = [['0']*self.dim for i in range(self.dim)]
+        st, m = 1, 0
+        for v in range(self.dim//2):
+            for i in range(self.dim-m):
+                mat[v][i+v] = str(st)
+                st+=1
+            for i in range(v+1, self.dim-v):
+                mat[i][-v-1] = str(st)
+                st+=1
+            for i in range(v+1, self.dim-v):
+                mat[-v-1][-i-1] = str(st)
+                st+=1
+            for i in range(v+1, self.dim-(v+1)):
+                mat[-i-1][v] = str(st)
+                st += 1
+        return mat
 
     def _count_invertions(self):
         cnt = 0
